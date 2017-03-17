@@ -8,6 +8,7 @@ tmpWrite = require 'temp-write'
 tmpFile = require 'tempfile'
 parallel = require 'bluebird'
 express = require 'express'
+http = require 'http'
 auth = require 'http-auth'
 log = require 'morgan'
 _ = require 'lodash'
@@ -25,6 +26,8 @@ app.use '/', express.static(__dirname + '/documentation')
 
 app.post '/', bodyParser.json(), (req, res) ->
 
+  console.log('1..')
+
   decode = (base64) ->
     new Buffer.from(base64, 'base64').toString 'utf8' if base64?
 
@@ -36,6 +39,8 @@ app.post '/', bodyParser.json(), (req, res) ->
     _.flatMap options, (val, key) ->
       if val then ['--' + key, val]
       else ['--' + key]
+
+  console.log('2..')
 
   # async parallel file creations
   parallel.join tmpFile('.pdf'),
@@ -52,5 +57,22 @@ app.post '/', bodyParser.json(), (req, res) ->
     .catch ->
       res.status(BAD_REQUEST).send 'invalid arguments'
 
-app.listen process.env.PORT or 5555
+app.set('port', process.env.PORT or 5555);
+#app.listen(app.get('port'), '127.0.0.1');
+#app.listen process.env.PORT or 5555
+
+#server = http.createServer(app);
+#server.listen(app.get('port'), 'localhost');
+#server.on('listening', -> 
+#    	console.log('Express server started on port %s at %s', server.address().port, server.address().address);
+#	);
+
+#app.listen(app.get('port'), '127.0.0.1', -> 
+#  console.log('app listening on port %d in %s mode', app.get('port'), app.get('env'));
+#);
+
+app.listen(app.get('port'),"0.0.0.0");
+
+console.log('Listening..')
+
 module.exports = app

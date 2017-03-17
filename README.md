@@ -59,7 +59,7 @@ curl -vvv -H "Content-Type: application/json" -X POST -d \
         "margin-bottom": "30"
       },
       "footer": "'"$footer"'"}' \
-https://"+user+":"+pass+"@<docker_host>:<port> -o OUTPUT_NAME.pdf
+https://"+user+":"+pass+"@127.0.0.1:80 -o OUTPUT_TEST.pdf
 ```
 #### PHP example
 ```php
